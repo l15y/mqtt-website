@@ -75,4 +75,4 @@ client.connect("test.mosquitto.org", 1883, 60)  # 连接服务器,端口为1883,
 client.subscribe("cuiliyan/suo/b")
 threading.Thread(target=client.loop_forever).start()
 PORT = int(os.getenv('PORT', 8080))
-run(host='127.1.2.3',port=PORT)
+run(host='0.0.0.0',port=PORT)
