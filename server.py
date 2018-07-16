@@ -1,8 +1,9 @@
 import paho.mqtt.client as mqtt
-import threading,os
+import threading,os,time
 from bottle import route, run
 
 html='''
+<script type="text/javascript" src="//leytton.gitee.io/simjq/releases/simJQ-2.2.min.js"></script>
 <style>
 a{
 	display: inline-block;
@@ -28,13 +29,29 @@ a{
     margin: 1em;
 }
 </style>
-<a href="/1">开</a>
+<script>
+function send(a){
+	$.ajax({
+	   	method: 'GET',
+	   	url:"/"+a,
+	    success: function (data,xhr) {
+	       alert(data);
+	    }
+	});
+}
+</script>
+<body style="text-align: center;">
+<a onclick="send('1')">开</a>
 <br>
-<a href="/0" style="background-image: linear-gradient(-180deg, #d03434 0%, #a72828 90%);">关</a>
+<a onclick="send('0')" style="background-image: linear-gradient(-180deg, #d03434 0%, #a72828 90%);">关</a>
+<br>
+<iframe src="/watch" />
 '''
 
-
-
+rec=""
+html2="""
+ <meta http-equiv="refresh" content="1">
+ """
 def sendMqtt(s):
 	print(s)
 	client.publish("cuiliyan/suo/a", payload=s, qos=0, retain=False)
@@ -43,10 +60,14 @@ def sendMqtt(s):
 def index():
 	return
 
+@route('/watch')
+def index():
+	return html2+rec
+
 @route('/:name')
 def index(name = '-'):
 	sendMqtt("cmd"+name+"pw1234")
-	return html
+	return "cmd"+name
 @route('/')
 def index(name = '-'):
 	client.publish("home/light", payload=name, qos=0, retain=False)
@@ -61,14 +82,20 @@ def on_connect(client, userdata, flags, rc):
 
 # 从服务器接受到消息后回调此函数
 def on_message(client, userdata, msg):
-    	print("命令:" + msg.payload.decode('ascii'))
+	global rec
+	msg=msg.payload.decode('ascii')
+	print("命令:" + msg)
+	if msg=="kai":
+		rec=time.strftime("%Y %B %d %Y %H:%M:%S", time.localtime(time.time()))+" 开<br>"+rec
+	if msg=="guan":
+		rec=time.strftime("%Y %B %d %Y %H:%M:%S", time.localtime(time.time()))+" 关<br>"+rec
     	#req.send(msg.payload)
 
 
 client = mqtt.Client(client_id="DeviceId-n44f8pa9b3",)
 # 参数有 Client(client_id="", clean_session=True, userdata=None, protocol=MQTTv311, transport="tcp")
-client.on_connect = on_connect  # 设置连接上服务器回调函数
-client.on_message = on_message  # 设置接收到服务器消息回调函数
+client.on_connect = on_connect  #设置连接上服务器回调函数
+client.on_message = on_message  #设置接收到服务器消息回调函数
 #client.tls_set()
 #client.username_pw_set("chome/ctrl1", password="y0m3kp+k7kdqLykuAdRyyl6REv7iO6+P5zY2UdjiwRY=")
 client.connect("test.mosquitto.org", 1883, 60)  # 连接服务器,端口为1883,维持心跳为60秒
