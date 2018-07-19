@@ -35,7 +35,7 @@ function send(a){
 	   	method: 'GET',
 	   	url:"/"+a,
 	    success: function (data,xhr) {
-	       alert(data);
+	       alert("发送成功");
 	    }
 	});
 }
@@ -62,7 +62,7 @@ def index():
 
 @route('/watch')
 def index():
-	return html2+rec
+	return html2+suo+'<br>'+rec
 
 @route('/:name')
 def index(name = '-'):
@@ -81,16 +81,18 @@ def on_connect(client, userdata, flags, rc):
 
 
 # 从服务器接受到消息后回调此函数
+suo=""
 def on_message(client, userdata, msg):
-	global rec
-	msg=msg.payload.decode('ascii')
+	global rec,suo
+	msg=msg.payload.decode('utf8')
 	print("命令:" + msg)
 	if msg=="kai":
 		rec=time.strftime("%Y %B %d %Y %H:%M:%S", time.localtime(time.time()))+" 开<br>"+rec
+		return
 	if msg=="guan":
 		rec=time.strftime("%Y %B %d %Y %H:%M:%S", time.localtime(time.time()))+" 关<br>"+rec
-    	#req.send(msg.payload)
-
+		return
+	suo=msg
 
 client = mqtt.Client(client_id="DeviceId-n44f8pa9b3",)
 # 参数有 Client(client_id="", clean_session=True, userdata=None, protocol=MQTTv311, transport="tcp")
