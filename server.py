@@ -3,6 +3,9 @@ import threading,os,time
 from bottle import route, run
 
 html='''
+<meta content="True" name="HandheldFriendly" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="mobile-web-app-capable" content="yes" />
 <script type="text/javascript" src="//leytton.gitee.io/simjq/releases/simJQ-2.2.min.js"></script>
 <style>
 a{
