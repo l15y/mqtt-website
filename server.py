@@ -88,6 +88,14 @@ def index():
 		else:
 			ser.sendto("off".encode('utf8'), ('115.29.240.46',6000))
 		return "1"
+	elif request.forms.get('password')=="12345":
+		username = request.forms.get('username')
+		cmd = int(request.forms.get('cmd'))
+		if cmd==1:
+			ser.sendto("p1".encode('utf8'), ('115.29.240.46',6000))
+		else:
+			ser.sendto("p2".encode('utf8'), ('115.29.240.46',6000))
+		return "1"
 	else:
 		return "0"
 
