@@ -1,0 +1,78 @@
+<meta content="True" name="HandheldFriendly" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="mobile-web-app-capable" content="yes" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script type="text/javascript" src="/js/simJQ.js"></script>
+<script src="/js/mui.min.js"></script>
+<link href="/css/mui.min.css" rel="stylesheet" type="text/css" />
+<style>
+body{
+    height: 100%;
+    background-color: #eee;
+    font-family: "Helvetica Neue",Helvetica,Arial,Verdana,Tahoma;
+    text-align: center;
+}
+.mui-appbar{
+    text-align: left;
+    font-size: 2em;
+    padding-left: 1em;
+}
+.mui-panel{
+    width: 40em;
+    text-align: left;
+    margin: auto;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+}
+#sidedrawer {
+    position: fixed;
+    top: 64px;
+    z-index: 2;
+    width: 20em;
+    height: 100%;
+    left: 0;
+}
+</style>
+<script>
+function send(a){
+    $.ajax({
+        method: 'POST',
+        url:"/cmd",
+        data:{
+            username:'{{device_id}}',
+            cmd:a,
+            password:$("#passwd")[0].value
+        },
+        success: function (data,xhr) {
+            if(data=="1")alert("发送成功");
+            if(data=="0")alert("密码错误");
+        }
+    });
+}
+ function alert(t) {
+    var modalEl = document.createElement('div');
+    modalEl.style.width = '15em';
+    modalEl.style.height = '1em';
+    modalEl.innerText=t;
+    modalEl.style.margin = '4em auto';
+    modalEl.style.padding = '0.5em';
+    modalEl.className='mui--text-display2'
+    modalEl.style.backgroundColor = '#fff';
+    mui.overlay('on', modalEl);
+  }
+</script>
+<body>
+<br>
+<form class="mui-form mui-panel">
+  <legend>控制</legend>
+  <div class="mui-textfield">
+    <input id="passwd" type="text" placeholder="密码">
+  </div>
+<a onclick="send('1')" class="mui-btn mui-btn--large mui-btn--primary">开</a>
+<a onclick="send('0')" class="mui-btn mui-btn--large mui-btn--danger">关</a>
+</form>
+<!-- <br>
+<iframe  class="mui-panel" src="/watch/{{device_id}}"></iframe> -->
