@@ -19,7 +19,7 @@ t1.start()
 def live_thread():
 	while(1):
 	    ser.sendto("ep=Q8X14B6KHD9DVWB2&pw=112233".encode('utf8'), ('115.29.240.46',6000))
-	    time.sleep(15)
+	    time.sleep(10)
 t2=threading.Thread(target=live_thread, args=())
 t2.setDaemon(True)
 t2.start()
@@ -87,7 +87,11 @@ def index():
 		cmd = int(request.forms.get('cmd'))
 		if cmd==1:
 			ser.sendto("on".encode('utf8'), ('115.29.240.46',6000))
+			ser.sendto("on".encode('utf8'), ('115.29.240.46',6000))
+			ser.sendto("on".encode('utf8'), ('115.29.240.46',6000))
 		else:
+			ser.sendto("off".encode('utf8'), ('115.29.240.46',6000))
+			ser.sendto("off".encode('utf8'), ('115.29.240.46',6000))
 			ser.sendto("off".encode('utf8'), ('115.29.240.46',6000))
 		return "1"
 	elif request.forms.get('password')=="12345":
@@ -95,7 +99,11 @@ def index():
 		cmd = int(request.forms.get('cmd'))
 		if cmd==1:
 			ser.sendto("p1".encode('utf8'), ('115.29.240.46',6000))
+			ser.sendto("p1".encode('utf8'), ('115.29.240.46',6000))
+			ser.sendto("p1".encode('utf8'), ('115.29.240.46',6000))
 		else:
+			ser.sendto("p2".encode('utf8'), ('115.29.240.46',6000))
+			ser.sendto("p2".encode('utf8'), ('115.29.240.46',6000))
 			ser.sendto("p2".encode('utf8'), ('115.29.240.46',6000))
 		return "1"
 	else:
