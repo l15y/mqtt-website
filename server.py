@@ -9,8 +9,10 @@ ser.bind(('0.0.0.0',6000))
 
 def rec_thread():
 	while(1):
-		s=str(ser.recvfrom(2048)[0])
+		s=str(ser.recvfrom(2048)[0],"utf8")
+		if s=="[iotxx:update]":continue
 		print(s)
+		iot_devices["nbiot"].update(s)
 t1=threading.Thread(target=rec_thread, args=())
 t1.setDaemon(True)
 t1.start()
@@ -28,17 +30,8 @@ class iot_device(object):
 		self.last_state=""
 		self.history=""
 	def update(self,msg):
-		if msg=="kai":
-			self.history=get_str_time()+" 开<br>"+self.history
-			return
-		if msg=="guan":
-			self.history=get_str_time()+" 关<br>"+self.history
-			return
-		if(self.last_state==msg):
-			return
-		print("update",msg)
 		self.last_state=msg
-		self.history=get_str_time()+msg+"<br>"+self.history
+		self.history=get_str_time()+","+msg+"\\n"+self.history
 		
 
 html2="""
@@ -59,6 +52,9 @@ def index(id):
 @route('/device/:id')
 def index(id):
 	return template('ctrl',device_id=id)
+@route('/device2/:id')
+def index(id):
+	return template('ctrl2',device_id=id,history=iot_devices[id].history)
 
 @route('/show')
 def index():
@@ -74,7 +70,13 @@ def index(name = '-'):
 @route('/js/:name')
 def index(name = '-'):
 	return static_file(name, root="views")
+@route('/css/fonts/:name')
+def index(name = '-'):
+	return static_file(name, root="views/fonts")
 @route('/css/:name')
+def index(name = '-'):
+	return static_file(name, root="views")
+@route('/src/:name')
 def index(name = '-'):
 	return static_file(name, root="views")
 

@@ -1,0 +1,140 @@
+<meta content="True" name="HandheldFriendly" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="mobile-web-app-capable" content="yes" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="/js/vue.js"></script>
+<script type="text/javascript" src="/js/simJQ.js"></script>
+<link rel="stylesheet" href="/css/index.css">
+<title>控制</title>
+<script src="/js/index.js"></script>
+<style>
+.el-header {
+    line-height: 60px;
+}
+
+.el-aside {
+    background-color: #545c64;
+    color: #333;
+    line-height: 200px;
+}
+
+.el-main {
+    background-color: #E9EEF3;
+    color: #333;
+    text-align: right;
+}
+
+.el-container {
+    min-height: 900px;
+}
+
+.el-submenu__icon-arrow {
+    right: 10px;
+}
+
+.el-menu {
+    border-right: solid 0px #e6e6e6;
+}
+</style>
+<script>
+function send(a, b) {
+    $.ajax({
+        method: 'POST',
+        url: "/cmd",
+        data: {
+            username: '{{device_id}}',
+            cmd: a,
+            password: b
+        },
+        success: function(data, xhr) {
+            if (data == "1") {
+                show_result(true)
+            }
+            if (data == "0") {
+                show_result(false)
+            }
+        },
+        error: function() {
+            show_result(false)
+        }
+    });
+}
+
+function show_result(result) {
+
+    app.loading = false
+    app.$message({
+        showClose: true,
+        duration: 800,
+        message: result ? '设置成功' : '设置失败',
+        type: result ? 'success' : 'error',
+        center: true
+    });
+}
+
+function alert(t) {
+    var modalEl = document.createElement('div');
+    modalEl.style.width = '15em';
+    modalEl.style.height = '1em';
+    modalEl.innerText = t;
+    modalEl.style.margin = '4em auto';
+    modalEl.style.padding = '0.5em';
+    modalEl.className = 'mui--text-display2'
+    modalEl.style.backgroundColor = '#fff';
+    mui.overlay('on', modalEl);
+}
+use_history = "{{!history}}".split("\n")
+tableData = []
+use_history.forEach(function(a) {
+    if (!a) return
+    a = a.split(",")
+    console.log(a)
+    tableData.push({
+        date: a[0],
+        name: a[1],
+    })
+})
+</script>
+
+<body style="margin: 0;">
+    <div id="app">
+        <el-container>
+            <el-aside width="170">
+                <el-menu :default-openeds="['1', '2']" class="el-menu-vertical-demo" background-color="#545c64" text-color="#fff" active-text-color="#ffd04b">
+                    <el-submenu index="1">
+                        <template slot="title">
+                            <child dizhi="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBzdGFuZGFsb25lPSJubyI/PjwhRE9DVFlQRSBzdmcgUFVCTElDICItLy9XM0MvL0RURCBTVkcgMS4xLy9FTiIgImh0dHA6Ly93d3cudzMub3JnL0dyYXBoaWNzL1NWRy8xLjEvRFREL3N2ZzExLmR0ZCI+PHN2ZyB0PSIxNTM4MzU4MTc3OTAzIiBjbGFzcz0iaWNvbiIgc3R5bGU9IiIgdmlld0JveD0iMCAwIDEwMjQgMTAyNCIgdmVyc2lvbj0iMS4xIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHAtaWQ9IjI4NzkiIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIiB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCI+PGRlZnM+PHN0eWxlIHR5cGU9InRleHQvY3NzIj48L3N0eWxlPjwvZGVmcz48cGF0aCBkPSJNNTEyIDQyNi42NjY2NjdDNTU4LjkzMzMzMyA0MjYuNjY2NjY3IDU5Ny4zMzMzMzMgNDY1LjA2NjY2NyA1OTcuMzMzMzMzIDUxMiA1OTcuMzMzMzMzIDUzMy4zMzMzMzMgNTg5LjY1MzMzMyA1NTIuMTA2NjY3IDU3Ny4yOCA1NjcuMDRMNzEyLjUzMzMzMyA5MzguNjY2NjY3IDYyMS42NTMzMzMgOTM4LjY2NjY2NyA1MTIgNjM3LjAxMzMzMyA0MDIuMzQ2NjY3IDkzOC42NjY2NjcgMzExLjQ2NjY2NyA5MzguNjY2NjY3IDQ0Ni43MiA1NjcuMDRDNDM0LjM0NjY2NyA1NTIuMTA2NjY3IDQyNi42NjY2NjcgNTMzLjMzMzMzMyA0MjYuNjY2NjY3IDUxMiA0MjYuNjY2NjY3IDQ2NS4wNjY2NjcgNDY1LjA2NjY2NyA0MjYuNjY2NjY3IDUxMiA0MjYuNjY2NjY3TTUxMiAzNDEuMzMzMzMzQzQxNy43MDY2NjcgMzQxLjMzMzMzMyAzNDEuMzMzMzMzIDQxNy43MDY2NjcgMzQxLjMzMzMzMyA1MTIgMzQxLjMzMzMzMyA1MzMuMzMzMzMzIDM0NS42IDU1NC42NjY2NjcgMzUzLjI4IDU3NC4yOTMzMzNMMzE1LjczMzMzMyA2NzYuNjkzMzMzQzI3OC42MTMzMzMgNjMxLjg5MzMzMyAyNTYgNTc0LjcyIDI1NiA1MTIgMjU2IDM3MC43NzMzMzMgMzcwLjc3MzMzMyAyNTYgNTEyIDI1NiA2NTMuMjI2NjY3IDI1NiA3NjggMzcwLjc3MzMzMyA3NjggNTEyIDc2OCA1NzQuNzIgNzQ1LjM4NjY2NyA2MzEuODkzMzMzIDcwOC4yNjY2NjcgNjc2LjY5MzMzM0w2NzAuNzIgNTc0LjI5MzMzM0M2NzguNCA1NTQuNjY2NjY3IDY4Mi42NjY2NjcgNTMzLjMzMzMzMyA2ODIuNjY2NjY3IDUxMiA2ODIuNjY2NjY3IDQxNy43MDY2NjcgNjA2LjI5MzMzMyAzNDEuMzMzMzMzIDUxMiAzNDEuMzMzMzMzTTUxMiAxNzAuNjY2NjY3QzMyMy40MTMzMzMgMTcwLjY2NjY2NyAxNzAuNjY2NjY3IDMyMy40MTMzMzMgMTcwLjY2NjY2NyA1MTIgMTcwLjY2NjY2NyA2MTIuNjkzMzMzIDIxMy4zMzMzMzMgNzA0IDI4My4zMDY2NjcgNzY1LjQ0TDI1Mi41ODY2NjcgODUwLjc3MzMzM0MxNTEuMDQgNzcyLjY5MzMzMyA4NS4zMzMzMzMgNjQ5LjgxMzMzMyA4NS4zMzMzMzMgNTEyIDg1LjMzMzMzMyAyNzYuNDggMjc2LjQ4IDg1LjMzMzMzMyA1MTIgODUuMzMzMzMzIDc0Ny41MiA4NS4zMzMzMzMgOTM4LjY2NjY2NyAyNzYuNDggOTM4LjY2NjY2NyA1MTIgOTM4LjY2NjY2NyA2NDkuODEzMzMzIDg3Mi45NiA3NzIuNjkzMzMzIDc3MS40MTMzMzMgODUwLjc3MzMzM0w3NDAuNjkzMzMzIDc2NS40NEM4MTAuNjY2NjY3IDcwNCA4NTMuMzMzMzMzIDYxMi42OTMzMzMgODUzLjMzMzMzMyA1MTIgODUzLjMzMzMzMyAzMjMuNDEzMzMzIDcwMC41ODY2NjcgMTcwLjY2NjY2NyA1MTIgMTcwLjY2NjY2N1oiIHAtaWQ9IjI4ODAiPjwvcGF0aD48L3N2Zz4="></child></i>NB-iot设备
+                        </template>
+                        <el-menu-item index="1-1">1</el-menu-item>
+                        <el-menu-item index="1-2">2</el-menu-item>
+                    </el-submenu>
+                    <el-submenu index="2">
+                        <template slot="title">
+                            <child dizhi="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBzdGFuZGFsb25lPSJubyI/PjwhRE9DVFlQRSBzdmcgUFVCTElDICItLy9XM0MvL0RURCBTVkcgMS4xLy9FTiIgImh0dHA6Ly93d3cudzMub3JnL0dyYXBoaWNzL1NWRy8xLjEvRFREL3N2ZzExLmR0ZCI+PHN2ZyB0PSIxNTM4MzU1MTA5NzA2IiBjbGFzcz0iaWNvbiIgc3R5bGU9IiIgdmlld0JveD0iMCAwIDEwMjQgMTAyNCIgdmVyc2lvbj0iMS4xIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHAtaWQ9IjMxNzIiIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIiB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCI+PGRlZnM+PHN0eWxlIHR5cGU9InRleHQvY3NzIj48L3N0eWxlPjwvZGVmcz48cGF0aCBkPSJNNTEyLjkgNzQ3LjNjLTMyLjIgMC01OC40IDI2LjEtNTguMyA1OC40IDAgMzIuMiAyNi4xIDU4LjQgNTguNCA1OC4zIDMyLjIgMCA1OC4zLTI2LjEgNTguMy01OC4zLTAuMS0zMi4zLTI2LjItNTguNC01OC40LTU4LjR6TTY4OC45IDYyMy4ybC0yLjctMi43Yy0wLjYtMC42LTEuMS0xLjItMS43LTEuOGwtMi42LTIuNS0wLjEtMC4xYy05My40LTkzLjQtMjQ0LjgtOTMuMy0zMzguMiAwLjEtOCA3LjktMTIuNCAxOC43LTEyLjQgMjkuOSAwIDIzLjMgMTkgNDIuMiA0Mi4zIDQyLjJoMC4xYzExLjIgMCAyMS45LTQuNCAyOS44LTEyLjRsMC4xLTAuMWM2MC40LTYwLjQgMTU4LjQtNjAuMyAyMTguOCAwLjFsNy4xIDcuMSAwLjQtMC40YzcuMiA1LjMgMTYgOC4yIDI1IDguMmgwLjFjOC45IDAgMTcuNi0yLjkgMjQuOC04LjIgMTguOC0xMy44IDIyLjktNDAuMyA5LjEtNTkuMWwwLjEtMC4zeiIgcC1pZD0iMzE3MyI+PC9wYXRoPjxwYXRoIGQ9Ik04MDIuMiA0NjguOWMtMTYwLjYtMTYwLjMtNDIwLjYtMTYwLjEtNTgwLjkgMC41LTggNy45LTEyLjQgMTguNy0xMi40IDMwIDAgMjMuMyAxOSA0Mi4yIDQyLjMgNDIuMSAxMS4yIDAgMjEuOS00LjQgMjkuOC0xMi40IDEyNy42LTEyNy42IDMzNC40LTEyNy42IDQ2MiAwIDcuOSA4IDE4LjcgMTIuNCAyOS45IDEyLjRoMC4xYzExLjEgMCAyMS44LTQuNSAyOS43LTEyLjQgMTYuNS0xNi41IDE2LjUtNDMuMiAwLTU5LjgtMC4yLTAuMS0wLjQtMC4zLTAuNS0wLjR6IiBwLWlkPSIzMTc0Ij48L3BhdGg+PHBhdGggZD0iTTkyNC4zIDMzMC43bC0wLjYtMC42QzY5NiAxMDIuNyAzMjcuMSAxMDMgOTkuNyAzMzAuN2MtOCA3LjktMTIuNCAxOC43LTEyLjQgMjkuOSAwIDIzLjMgMTkgNDIuMiA0Mi4zIDQyLjJoMC4xYzExLjIgMCAyMS45LTQuNCAyOS44LTEyLjRsMC41LTAuNWMxOTQuNy0xOTQuNCA1MTAuMi0xOTQuMiA3MDQuNiAwLjUgNy45IDggMTguNyAxMi40IDI5LjkgMTIuNGgwLjFjMTEuMiAwIDIxLjktNC41IDI5LjctMTIuNCAxNi40LTE2LjUgMTYuNC00My4xIDAtNTkuN3oiIHAtaWQ9IjMxNzUiPjwvcGF0aD48L3N2Zz4="></child></i>WiFi设备
+                        </template>
+                        <el-menu-item index="2-1">1</el-menu-item>
+                        <el-menu-item index="2-2">2</el-menu-item>
+                    </el-submenu>
+                </el-menu>
+            </el-aside>
+            <el-container v-loading="loading">
+                <el-header>{{device_id}}</el-header>
+                <el-main>
+                    <kaiguan miaoshu="插座" pw="12345" activetext="开" inactivetext="关"></kaiguan>
+                    <kaiguan miaoshu="车锁" pw="1234" activetext="升" inactivetext="降"></kaiguan>
+                    <template>
+                        <el-table :data="tableData" style="width: 100%">
+                            <el-table-column prop="date" label="日期">
+                            </el-table-column>
+                            <el-table-column prop="name" label="行为">
+                            </el-table-column>
+                        </el-table>
+                    </template>
+                </el-main>
+            </el-container>
+        </el-container>
+    </div>
+    <script src="/js/main.js"></script>
+    <!-- <br>
+<iframe  class="mui-panel" src="/watch/{{device_id}}"></iframe> -->
