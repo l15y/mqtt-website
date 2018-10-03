@@ -36,6 +36,9 @@
 .el-menu {
     border-right: solid 0px #e6e6e6;
 }
+[v-cloak] {
+            display: none;
+        }
 </style>
 <script>
 function send(a, b) {
@@ -86,21 +89,24 @@ function alert(t) {
 }
 use_history = "{{!history}}".split("\n")
 tableData = []
+var old_cmd
 use_history.forEach(function(a) {
     if (!a) return
     a = a.split(",")
     console.log(a)
+    if(a[1]!=old_cmd)
     tableData.push({
         date: a[0],
         name: a[1],
     })
+old_cmd=a[1]
 })
 </script>
 
 <body style="margin: 0;">
-    <div id="app">
+    <div id="app" v-cloak>
         <el-container>
-            <el-aside width="170">
+            <el-aside style="min-width: 20%;width: 150px;">
                 <el-menu :default-openeds="['1', '2']" class="el-menu-vertical-demo" background-color="#545c64" text-color="#fff" active-text-color="#ffd04b">
                     <el-submenu index="1">
                         <template slot="title">
